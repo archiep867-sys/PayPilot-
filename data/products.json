@@ -1,0 +1,272 @@
+[
+ {
+  "id": "NOT-01",
+  "name": "Campus Ruled A5",
+  "category": "notebook",
+  "price": 1.2,
+  "quality": 3.8,
+  "reliability": 0.7,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "NOT-02",
+  "name": "Spiral Pro 200pg",
+  "category": "notebook",
+  "price": 2.1,
+  "quality": 4.2,
+  "reliability": 0.8,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "NOT-03",
+  "name": "Hardcover Dotted",
+  "category": "notebook",
+  "price": 3.6,
+  "quality": 4.6,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "NOT-04",
+  "name": "Recycled Kraft",
+  "category": "notebook",
+  "price": 1.75,
+  "quality": 4.0,
+  "reliability": 0.75,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "NOT-05",
+  "name": "Executive Leather-look",
+  "category": "notebook",
+  "price": 5.2,
+  "quality": 4.8,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "NOT-06",
+  "name": "Budget Pack Slim",
+  "category": "notebook",
+  "price": 0.85,
+  "quality": 3.3,
+  "reliability": 0.6,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "PEN-01",
+  "name": "Basic Ball Pen",
+  "category": "pen",
+  "price": 0.2,
+  "quality": 3.4,
+  "reliability": 0.65,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "PEN-02",
+  "name": "Gel Smooth 0.5",
+  "category": "pen",
+  "price": 0.55,
+  "quality": 4.3,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "PEN-03",
+  "name": "Fine Liner Black",
+  "category": "pen",
+  "price": 0.8,
+  "quality": 4.5,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "PEN-04",
+  "name": "Retractable Classic",
+  "category": "pen",
+  "price": 0.35,
+  "quality": 3.9,
+  "reliability": 0.75,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "PEN-05",
+  "name": "Metal Barrel Pen",
+  "category": "pen",
+  "price": 1.6,
+  "quality": 4.7,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "PEN-06",
+  "name": "Value Pen",
+  "category": "pen",
+  "price": 0.12,
+  "quality": 3.0,
+  "reliability": 0.55,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "MAR-01",
+  "name": "Whiteboard Set of 4",
+  "category": "marker",
+  "price": 3.5,
+  "quality": 4.1,
+  "reliability": 0.8,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "MAR-02",
+  "name": "Permanent Set of 6",
+  "category": "marker",
+  "price": 4.2,
+  "quality": 4.3,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "MAR-03",
+  "name": "Chisel Tip Set of 8",
+  "category": "marker",
+  "price": 5.9,
+  "quality": 4.6,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "MAR-04",
+  "name": "Jumbo Poster Set",
+  "category": "marker",
+  "price": 6.8,
+  "quality": 4.5,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "MAR-05",
+  "name": "Budget Marker Set",
+  "category": "marker",
+  "price": 2.2,
+  "quality": 3.5,
+  "reliability": 0.65,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "MAR-06",
+  "name": "Pastel Highlighter Set",
+  "category": "marker",
+  "price": 3.1,
+  "quality": 4.2,
+  "reliability": 0.8,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "DEC-01",
+  "name": "Balloon Pack (100)",
+  "category": "decoration",
+  "price": 4.5,
+  "quality": 4.0,
+  "reliability": 0.8,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "DEC-02",
+  "name": "Paper Banner Kit",
+  "category": "decoration",
+  "price": 6.0,
+  "quality": 4.3,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "DEC-03",
+  "name": "LED String Lights 10m",
+  "category": "decoration",
+  "price": 9.5,
+  "quality": 4.6,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "DEC-04",
+  "name": "Streamers 12 rolls",
+  "category": "decoration",
+  "price": 3.2,
+  "quality": 3.8,
+  "reliability": 0.7,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "DEC-05",
+  "name": "Backdrop Curtain Gold",
+  "category": "decoration",
+  "price": 11.0,
+  "quality": 4.4,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "DEC-06",
+  "name": "Table Confetti Set",
+  "category": "decoration",
+  "price": 2.4,
+  "quality": 3.6,
+  "reliability": 0.7,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "SNA-01",
+  "name": "Cookies Family Pack",
+  "category": "snack",
+  "price": 3.8,
+  "quality": 4.2,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "SNA-02",
+  "name": "Mixed Chips 10-pack",
+  "category": "snack",
+  "price": 5.6,
+  "quality": 4.0,
+  "reliability": 0.8,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "SNA-03",
+  "name": "Fruit Juice Box 12",
+  "category": "snack",
+  "price": 4.9,
+  "quality": 4.1,
+  "reliability": 0.85,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "SNA-04",
+  "name": "Granola Bars 24",
+  "category": "snack",
+  "price": 7.2,
+  "quality": 4.5,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "SNA-05",
+  "name": "Popcorn Tubs 6",
+  "category": "snack",
+  "price": 3.1,
+  "quality": 3.7,
+  "reliability": 0.7,
+  "seller": "PayPilot Demo Store"
+ },
+ {
+  "id": "SNA-06",
+  "name": "Water Bottles 24",
+  "category": "snack",
+  "price": 5.4,
+  "quality": 4.3,
+  "reliability": 0.9,
+  "seller": "PayPilot Demo Store"
+ }
+]

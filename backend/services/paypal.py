@@ -45,3 +45,11 @@ async def verify_webhook(headers, event):
         return r.status_code == 200 and r.json().get("verification_status") == "SUCCESS"
     except Exception:
         return False
+
+async def refund(capture_id):
+    async with httpx.AsyncClient(timeout=25) as c:
+        t = await _token(c)
+        r = await c.post(f"{settings.paypal_base}/v2/payments/captures/{capture_id}/refund", json={},
+                         headers={"Authorization": f"Bearer {t}", "PayPal-Request-Id": f"refund-{capture_id}"})
+    if r.status_code not in (200, 201): raise PayPalError(f"Refund failed: {r.text[:200]}")
+    return {"refund_id": r.json()["id"], "status": r.json()["status"]}

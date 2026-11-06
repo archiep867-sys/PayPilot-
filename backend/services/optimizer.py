@@ -37,3 +37,18 @@ def optimize(requirements, catalogue_by_cat, budget, priority="balanced"):
     status = "over_budget" if t > budget else ("no_products" if not items else "ok")
     return {"items": items, "total": t, "budget": budget, "remaining": round(budget - t, 2),
             "status": status, "downgrades": swaps, "missing_categories": missing, "priority": priority}
+
+
+def suggest_swaps(items, pool, tol=0.5):
+    """Cheaper alternatives with nearly the same quality (within `tol` stars). Pure code, no LLM."""
+    out = []
+    for i in items:
+        best = None
+        for a in pool.get(i["category"], []):
+            if a["id"] == i["id"] or a["price"] >= i["price"] or a["quality"] < i["quality"] - tol: continue
+            save = round((i["price"] - a["price"]) * i["quantity"], 2)
+            if best is None or save > best["saves"]:
+                best = {"replace": i["id"], "replace_name": i["name"], "with": a["id"], "with_name": a["name"],
+                        "saves": save, "quality_change": round(a["quality"] - i["quality"], 2)}
+        if best: out.append(best)
+    return sorted(out, key=lambda x: -x["saves"])[:3]

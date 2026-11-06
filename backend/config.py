@@ -10,6 +10,8 @@ class Settings:
     paypal_secret = os.getenv("PAYPAL_CLIENT_SECRET", "")
     paypal_base = os.getenv("PAYPAL_BASE_URL", "https://api-m.sandbox.paypal.com")
     paypal_webhook_id = os.getenv("PAYPAL_WEBHOOK_ID", "")
+    allowed_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "*").split(",")]
+    demo_mode = os.getenv("DEMO_MODE", "0") == "1"
     channel3_key = os.getenv("CHANNEL3_API_KEY", "")
     currency = os.getenv("CURRENCY", "USD")
     db_path = os.getenv("DB_PATH", str(Path(__file__).parent / "paypilot.db"))

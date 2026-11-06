@@ -37,14 +37,14 @@ async def test_amount_mismatch_and_duplicate_capture(monkeypatch):
     async def fake_create(cart_id, lines, total, cur="USD"): return "ORDER123"
     async def fake_capture(oid): return {"status": "COMPLETED", "capture_id": "CAP1", "amount": db.get_order(oid)["amount"], "currency": "USD"}
     monkeypatch.setattr(paypal, "create_order", fake_create); monkeypatch.setattr(paypal, "capture", fake_capture)
-    c = TestClient(main.app)
+    c = TestClient(main.app); n0 = len(c.get("/api/transactions").json())
     plan = c.post("/api/shopping/plan", json={"request": DEMO}).json()
     cid, total = plan["cart_id"], plan["validation"]["total"]
     assert c.post("/api/payments/create-order", json={"cart_id": cid, "approved_amount": total - 1}).status_code == 409
     assert c.post("/api/payments/create-order", json={"cart_id": cid, "approved_amount": total}).json()["order_id"] == "ORDER123"
     first = c.post("/api/payments/capture", json={"order_id": "ORDER123"}).json()
     second = c.post("/api/payments/capture", json={"order_id": "ORDER123"}).json()
-    assert first["status"] == "COMPLETED" and second.get("duplicate") and len(c.get("/api/transactions").json()) == 1
+    assert first["status"] == "COMPLETED" and second.get("duplicate") and len(c.get("/api/transactions").json()) == n0 + 1
 
 
 def _planned(c):

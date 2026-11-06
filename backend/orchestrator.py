@@ -15,7 +15,7 @@ async def plan(text, default_budget=100.0, rules=None, overrides=None):
     cart = await decision_agent.run(d["requirements"], d["budget"], d["priority"])
     step("Discovery", "Catalogue searched", f"{sum(1 + len(i['alternatives']) for i in cart['items'])} candidate products compared")
     step("Decision", "Budget optimized", f"Total ${cart['total']:.2f}, {cart['downgrades']} downgrade(s), status {cart['status']}")
-    v = payment_agent.validate([{"id": i["id"], "quantity": i["quantity"]} for i in cart["items"]], d["budget"], rules) if cart["items"] else {"allowed": False, "level": "blocked", "reason": "No matching products"}
+    v = payment_agent.validate([{"id": i["id"], "quantity": i["quantity"]} for i in cart["items"]], d["budget"], rules, db.month_context()) if cart["items"] else {"allowed": False, "level": "blocked", "reason": "No matching products"}
     step("Payment", "Permission checked", v["reason"])
     db.save_cart(cid, {"cart": cart, "validation": v, "request": d, "order_id": None})
     return {"cart_id": cid, "status": "ready" if v["allowed"] else "blocked", "request": d, "cart": cart, "validation": v, "trace": trace}

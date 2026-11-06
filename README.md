@@ -12,7 +12,7 @@ Safety: the AI never calls PayPal. Backend creates the order only if the buyer-a
 cp .env.example backend/.env   # fill PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET (Sandbox), optional AI key
 python -m venv venv && source venv/bin/activate
 pip install -r backend/requirements.txt
-pytest                          # 6 tests, no network needed
+pytest                          # 11 tests, no network needed
 uvicorn backend.main:app --reload
 cd frontend && npm install && npm run dev   # http://localhost:5173
 ```

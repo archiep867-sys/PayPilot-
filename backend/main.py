@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+import json
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from backend import orchestrator, db
@@ -8,7 +9,10 @@ from backend.config import settings
 
 app = FastAPI(title="PayPilot")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-ORDERS = {}  # paypal order_id -> {cart_id, amount}
+class Rules(BaseModel):
+    auto_limit: float
+    approval_limit: float
+    max_per_purchase: float
 
 class PlanReq(BaseModel):
     request: str
@@ -37,28 +41,28 @@ async def reopt(r: Reopt):
 
 @app.get("/api/shopping/{cart_id}")
 def get_cart(cart_id: str):
-    s = orchestrator.CARTS.get(cart_id)
+    s = db.load_cart(cart_id)
     if not s: raise HTTPException(404, "Cart not found")
     return s
 
 @app.post("/api/payments/create-order")
 async def create_order(r: CreateOrder):
-    s = orchestrator.CARTS.get(r.cart_id)
+    s = db.load_cart(r.cart_id)
     if not s: raise HTTPException(404, "Cart not found")
     items = [{"id": i["id"], "quantity": i["quantity"]} for i in s["cart"]["items"]]
-    v = payment_agent.validate(items, s["request"]["budget"])  # re-validate from trusted prices
+    v = payment_agent.validate(items, s["request"]["budget"], db.get_rules())  # re-validate from trusted prices
     if not v["allowed"]: raise HTTPException(400, v["reason"])
     if round(r.approved_amount, 2) != v["total"]: raise HTTPException(409, f"Approved amount ${r.approved_amount:.2f} does not match cart total ${v['total']:.2f}")
     if s["order_id"]: return {"order_id": s["order_id"], "reused": True}
     try: oid = await paypal.create_order(r.cart_id, v["lines"], v["total"], settings.currency)
     except paypal.PayPalError as e: db.log(r.cart_id, "Payment", "create_failed", str(e)); raise HTTPException(502, str(e))
-    s["order_id"] = oid; ORDERS[oid] = {"cart_id": r.cart_id, "amount": v["total"], "lines": v["lines"]}
+    s["order_id"] = oid; db.save_cart(r.cart_id, s); db.save_order(oid, r.cart_id, v["total"], v["lines"])
     db.log(r.cart_id, "Payment", "order_created", oid)
     return {"order_id": oid}
 
 @app.post("/api/payments/capture")
 async def capture(r: Capture):
-    o = ORDERS.get(r.order_id)
+    o = db.get_order(r.order_id)
     if not o: raise HTTPException(404, "Unknown order")
     done = db.get_tx(r.order_id)
     if done: return {**done, "duplicate": True}  # idempotent: no second capture
@@ -72,3 +76,21 @@ async def capture(r: Capture):
 
 @app.get("/api/transactions")
 def transactions(): return db.list_tx()
+
+@app.get("/api/settings")
+def get_settings(): return db.get_rules()
+
+@app.put("/api/settings")
+def put_settings(r: Rules):
+    if not (0 <= r.auto_limit <= r.approval_limit <= r.max_per_purchase):
+        raise HTTPException(422, "Limits must satisfy 0 <= auto <= approval <= max per purchase")
+    db.set_rules(r.model_dump()); return db.get_rules()
+
+@app.post("/api/webhooks/paypal")
+async def webhook(req: Request):
+    ev = json.loads(await req.body())
+    if not await paypal.verify_webhook(req.headers, ev): raise HTTPException(400, "Webhook signature not verified")
+    status = {"PAYMENT.CAPTURE.COMPLETED": "COMPLETED", "PAYMENT.CAPTURE.DENIED": "DENIED",
+              "PAYMENT.CAPTURE.REFUNDED": "REFUNDED", "PAYMENT.CAPTURE.REVERSED": "REVERSED"}.get(ev.get("event_type"))
+    if status and ev.get("resource", {}).get("id"): db.update_tx_status(ev["resource"]["id"], status)
+    return {"ok": True}

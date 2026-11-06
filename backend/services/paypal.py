@@ -31,3 +31,17 @@ async def capture(order_id):
     if r.status_code not in (200, 201): raise PayPalError(f"Capture failed: {r.text[:200]}")
     d = r.json(); cap = d["purchase_units"][0]["payments"]["captures"][0]
     return {"status": d["status"], "capture_id": cap["id"], "amount": float(cap["amount"]["value"]), "currency": cap["amount"]["currency_code"]}
+
+async def verify_webhook(headers, event):
+    """Verify a webhook with PayPal's verify-webhook-signature API. False if not configured or invalid."""
+    if not settings.paypal_webhook_id: return False
+    body = {"auth_algo": headers.get("paypal-auth-algo"), "cert_url": headers.get("paypal-cert-url"),
+            "transmission_id": headers.get("paypal-transmission-id"), "transmission_sig": headers.get("paypal-transmission-sig"),
+            "transmission_time": headers.get("paypal-transmission-time"), "webhook_id": settings.paypal_webhook_id, "webhook_event": event}
+    try:
+        async with httpx.AsyncClient(timeout=25) as c:
+            t = await _token(c)
+            r = await c.post(f"{settings.paypal_base}/v1/notifications/verify-webhook-signature", json=body, headers={"Authorization": f"Bearer {t}"})
+        return r.status_code == 200 and r.json().get("verification_status") == "SUCCESS"
+    except Exception:
+        return False

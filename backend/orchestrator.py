@@ -1,7 +1,6 @@
 import uuid
 from backend.agents import discovery_agent, decision_agent, payment_agent
 from backend import db
-CARTS = {}  # cart_id -> state (in-memory for MVP; transactions/logs persist in SQLite)
 
 async def plan(text, default_budget=100.0, rules=None, overrides=None):
     cid = uuid.uuid4().hex[:12]; trace = []
@@ -12,10 +11,11 @@ async def plan(text, default_budget=100.0, rules=None, overrides=None):
     step("Discovery", "Requirement understood", f"{len(d['requirements'])} categories, budget ${d['budget']:.2f} (parser: {d['parser']})")
     if not d["requirements"]:
         return {"cart_id": cid, "status": "no_requirements", "trace": trace, "message": "I couldn't find any products in your request. Try e.g. '10 notebooks and 20 pens under $50'."}
+    rules = rules or db.get_rules()
     cart = await decision_agent.run(d["requirements"], d["budget"], d["priority"])
     step("Discovery", "Catalogue searched", f"{sum(1 + len(i['alternatives']) for i in cart['items'])} candidate products compared")
     step("Decision", "Budget optimized", f"Total ${cart['total']:.2f}, {cart['downgrades']} downgrade(s), status {cart['status']}")
     v = payment_agent.validate([{"id": i["id"], "quantity": i["quantity"]} for i in cart["items"]], d["budget"], rules) if cart["items"] else {"allowed": False, "level": "blocked", "reason": "No matching products"}
     step("Payment", "Permission checked", v["reason"])
-    CARTS[cid] = {"cart": cart, "validation": v, "request": d, "order_id": None}
+    db.save_cart(cid, {"cart": cart, "validation": v, "request": d, "order_id": None})
     return {"cart_id": cid, "status": "ready" if v["allowed"] else "blocked", "request": d, "cart": cart, "validation": v, "trace": trace}
